@@ -19,12 +19,15 @@ jobs:
       - name: Find Gradle project
         run: |
           GRADLEW=$(find project -name gradlew -type f | head -n 1)
+
           if [ -z "$GRADLEW" ]; then
             echo "gradlew not found"
             find project -maxdepth 3 -type f | head -100
             exit 1
           fi
+
           chmod +x "$GRADLEW"
+
           echo "GRADLEW=$GRADLEW" >> "$GITHUB_ENV"
           echo "PROJECT_DIR=$(dirname "$GRADLEW")" >> "$GITHUB_ENV"
 
@@ -33,11 +36,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-
-      - name: Fix Java compatibility
-        run: |
-          find project -name "build.gradle" -o -name "build.gradle.kts" | xargs sed -i 's/JavaVersion.VERSION_1_8/JavaVersion.VERSION_17/g'
-          find project -name "build.gradle" -o -name "build.gradle.kts" | xargs sed -i 's/jvmTarget *= *["'\'']1\.8["'\'']/jvmTarget = "17"/g'
 
       - name: Build APK
         run: |
