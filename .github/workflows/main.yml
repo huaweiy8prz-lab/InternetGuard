@@ -34,6 +34,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Fix Java compatibility
+        run: |
+          find project -name "build.gradle" -o -name "build.gradle.kts" | xargs sed -i 's/JavaVersion.VERSION_1_8/JavaVersion.VERSION_17/g'
+          find project -name "build.gradle" -o -name "build.gradle.kts" | xargs sed -i 's/jvmTarget *= *["'\'']1\.8["'\'']/jvmTarget = "17"/g'
+
       - name: Build APK
         run: |
           cd "$PROJECT_DIR"
